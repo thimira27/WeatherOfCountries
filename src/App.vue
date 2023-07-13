@@ -1,38 +1,48 @@
 <template>
+  <!-- Apply the 'warm' class if weather.main is defined and temperature is greater than 16 -->
   <div
     id="app"
     :class="
-      typeof weather.main != 'undefined' && weather.main.temp > 16 ? 'warm' : ''
-    "
-  >
+      typeof weather.main != 'undefined' && weather.main.temp > 16 ? 'warm' : '' 
+    ">
     <main>
+      <!-- Bind the input value to the 'query' data property -->
+      <!-- Call the 'fetchWeather' method when a key is pressed -->
       <div class="search_box">
         <input
           type="text"
           class="search_bar"
           placeholder="search..."
-          v-model="query"
-          @keypress="fetchWeather"
+          v-model="query" 
+          @keypress="fetchWeather" 
         />
       </div>
 
-      <div class="weather_wrap" v-if="typeof weather.main != 'undefined'">
+      <!-- Render the weather information if 'weather.main' is defined -->
+      <div class="weather_wrap" v-if="typeof weather.main != 'undefined'"> 
         <div class="location_box">
+          <!-- Display the location and country -->
           <div class="location">
-            {{ weather.name }} , {{ weather.sys.country }}
+            {{ weather.name }} , {{ weather.sys.country }} 
           </div>
-          <div class="date">{{ dateBuilder() }}</div>
+          <!-- Display the formatted date -->
+          <div class="date">{{ dateBuilder() }}</div> 
         </div>
         <div class="weather_box">
-          <div class="temp">{{ Math.round(weather.main.temp) }}°C</div>
-          <div class="weather">{{ weather.weather[0].main }}</div>
+          <!-- Display the rounded temperature -->
+          <div class="temp">{{ Math.round(weather.main.temp) }}°C</div> 
+          <!-- Display the weather description -->
+          <div class="weather">{{ weather.weather[0].main }}</div> 
         </div>
       </div>
 
-      <footer class="undFooter" v-if="typeof weather.main != 'undefined'">
+      <!-- Render the footer if 'weather.main' is defined -->
+      <footer class="undFooter" v-if="typeof weather.main != 'undefined'"> 
         <p>&copy; 2023 : Thimira Galahitiyawa | Project <b>WeatherOfCountries</b></p>
       </footer>
-      <footer class="NotundFooter" v-if="typeof weather.main == 'undefined'">
+
+      <!-- Render the alternative footer if 'weather.main' is undefined -->
+      <footer class="NotundFooter" v-if="typeof weather.main == 'undefined'"> 
         <p>&copy; 2023 : Thimira Galahitiyawa | Project <b>WeatherOfCountries</b></p>
       </footer>
     </main>
@@ -44,44 +54,45 @@ export default {
   name: "App",
   data() {
     return {
-      api_key: "a1a4b330e33117ff284a43862ae6faba",
-      url_base: "https://api.openweathermap.org/data/2.5/",
-      query: "",
-      weather: {},
+      api_key: "a1a4b330e33117ff284a43862ae6faba", // API key for OpenWeatherMap API
+      url_base: "https://api.openweathermap.org/data/2.5/", // Base URL for OpenWeatherMap API
+      query: "", // Stores the value of the search input
+      weather: {}, // Stores the fetched weather data
     };
   },
   methods: {
     fetchWeather(e) {
-      if (e.key == "Enter") {
+      if (e.key == "Enter") { // Check if the Enter key was pressed
         fetch(
-          `${this.url_base}weather?q=${this.query}&units=metric&appid=${this.api_key}`
+          `${this.url_base}weather?q=${this.query}&units=metric&appid=${this.api_key}` // Construct the API URL with the search query and API key
         )
           .then((res) => {
-            return res.json();
+            return res.json(); // Convert the response to JSON
           })
-          .then(this.setResult);
+          .then(this.setResult); // Call the 'setResult' method with the fetched weather data
       }
     },
 
     setResult(results) {
-      this.weather = results;
-      console.log(this.weather.weather[0].main);
+      this.weather = results; // Update the 'weather' data property with the fetched weather data
+      console.log(this.weather.weather[0].main); // Log the main weather description to the console
     },
 
     dateBuilder() {
-      let d = new Date();
+      let d = new Date(); // Create a new Date object
       let options = {
         weekday: "long",
         month: "long",
         day: "numeric",
         year: "numeric",
       };
-      return d.toLocaleDateString(undefined, options);
+      return d.toLocaleDateString(undefined, options); // Format the date using the specified options and return the formatted date
     },
   },
 };
 </script>
 
+//all styling parts under here
 <style>
 * {
   margin: 0;
